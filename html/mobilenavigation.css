@@ -1,0 +1,144 @@
+.landscape #header, .landscape #main, .landscape #right, .landscape #footer, .landscape #mobilenavigationtop, .landscape #mobilenavigation .inside {
+    margin-left: auto;
+    margin-right: auto;
+    width: 420px;
+}
+.landscape .navItemsContainer {
+    height: 93px;
+}
+.portrait #header, .portrait #main, .portrait #right, .portrait #footer, .portrait #mobilenavigationtop, .portrait #mobilenavigation .inside {
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+}
+.portrait .navItemsContainer {
+    height: 230px;
+}
+.portrait .panel .parentTitle {
+    display: block;
+    float: right;
+    width: 200px;
+}
+.portrait .panel .navLink {
+    width: 220px;
+}
+.image_container {
+    margin: 0;
+    padding: 0;
+}
+#mobilenavigation {
+    height: 30px;
+    overflow: visible;
+    position: absolute;
+    width: 100%;
+}
+/* Set a background image here for the menu tab */
+#mobilenavigation .inside {
+    background: no-repeat scroll center bottom rgba(206, 206, 206, 0.9);
+    overflow: hidden;
+    padding: 0 0 40px;
+}
+#mobilenavigationtop {
+    background: url("nav-top.png") no-repeat scroll center top transparent;
+    height: 25px;
+    position: relative;
+    top: 1px;
+    width: 100%;
+    z-index: 99999;
+}
+#mobilenavigation .inside ul {
+    list-style-type: none;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-top: 0;
+}
+#mobilenavigation .inside li {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    margin: 0;
+    min-height: 40px;
+    padding: 4px 0 4px 4px;
+}
+#panelcontainer {
+    overflow: hidden;
+}
+#mobilenavigation .menuBack {
+    display: inline-block;
+    margin: 5px;
+}
+#panelcontainer .panel {
+    overflow: auto;
+}
+.landscape .panel .parentTitle {
+    display: block;
+    float: right;
+    width: 320px;
+}
+.landscape .panel .navLink {
+    width: 340px;
+}
+#panelcontainer .navItemsContainer {
+    clear: both;
+    overflow: auto;
+}
+#panelcontainer .level_1 .navItemsContainer {
+    height: auto;
+}
+#panelcontainer .parentTitle p {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: bold;
+    margin: 10px 15px 0 0;
+    text-align: right;
+}
+#panelcontainer .panel ul, #panelcontainer .panel li {
+    display: block;
+}
+#panelcontainer .panelHeader {
+    background-color: #888888;
+}
+#panelcontainer .navLink {
+    color: #000000;
+    display: inline-block;
+    font-size: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+.linkButton a {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid #808080;
+    border-radius: 3px 3px 3px 3px;
+    color: #666966;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px 12px 5px 13px;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 1px 1px 0 #EEEEEE;
+}
+.linkButton a:active {
+    box-shadow: 0 0 6px #999999;
+    color: #BBBBBB;
+}
+.linkButton a:focus, .linkButton a:hover {
+    box-shadow: 0 0 3px #AAAAAA;
+    text-decoration: none;
+}
+#panelcontainer .submenuButton {
+    background: url("listArrow.png") no-repeat scroll center center transparent;
+    clear: right;
+    display: block;
+    float: right;
+    height: 40px;
+    width: 50px;
+}
+#panelcontainer .submenuButton span {
+    display: none;
+}

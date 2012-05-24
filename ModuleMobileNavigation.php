@@ -33,10 +33,11 @@
  * Class ModuleMobileNavigation
  *
  * Front end module "mobilenavigation".
- * @copyright  Blair Winans 2011
- * @author     Blair Winans <http://www.winanscreative.com>
- * @author     Leo Feyer <http://www.contao.org>
- * @package    Controller
+ *
+ * @copyright  Winans Creative 2012
+ * @author     Blair Winans <blair@winanscreative.com>
+ * @author     Adam Fisher <adam@winanscreative.com>
+ * @package    Module
  */
 class ModuleMobileNavigation extends Module
 {
@@ -72,7 +73,7 @@ class ModuleMobileNavigation extends Module
 
 			return $objTemplate->parse();
 		}
-
+		
 		$strBuffer = parent::generate();
 		return strlen($this->Template->items) ? $strBuffer : '';
 	}
@@ -101,25 +102,23 @@ class ModuleMobileNavigation extends Module
 		$this->Template->skipNavigation = specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
 		$this->Template->items = $this->renderMobileNavigation($trail[$level]);
 		
-		$GLOBALS['TL_CSS'][] = 'system/modules/mobilenavigation/html/mobile.css';
-		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/mobilenavigation/html/mobile.js';
+		
+		$GLOBALS['TL_CSS'][] = 'system/modules/mobilenavigation/html/mobilenavigation.css';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/mobilenavigation/html/mobilenavigation.js';
 		$GLOBALS['TL_MOOTOOLS'][] = '<script type="text/javascript">
-		<!--//--><![CDATA[//><!--
+		/* <![CDATA[ */
+		var objMobNav' . $this->id . ' = null;
 		window.addEvent(\'domready\', function() {
-			new Accordion($$(\'a.Action\'), $$(\'div.accordion\'), {
-			display:-1,
-			alwaysHide: true,
-			opacity: false,
-			fixedHeight: '.($this->intLevelCount*47) /*@todo make this dynamic*/ .'
-			});
-			new MobileMenu({duration:\'short\', wrapper:\'mobilenav\', startlevel:'.($level+1).', forceSlide:false});
-			});
-		//--><!]]>
+			objMobNav' . $this->id . ' = new MobileNavigation();
+		});
+		/* ]]> */
 		</script>'."\n";
 	}
 	
-		/**
+	/**
 	 * Recursively compile the navigation menu and return it as HTML string
+	 * NOTE: This is almost exactly the same as the core "renderNavigation" method
+	 *
 	 * @param integer
 	 * @param integer
 	 * @return string
@@ -131,6 +130,8 @@ class ModuleMobileNavigation extends Module
 		// Get all active subpages
 		$objSubpages = $this->Database->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$this->showHidden ? (($this instanceof ModuleSitemap) ? " AND (p2.hide!=1 OR sitemap='map_always')" : " AND p2.hide!=1") : "") . ((FE_USER_LOGGED_IN && !BE_USER_LOGGED_IN) ? " AND p2.guests!=1" : "") . (!BE_USER_LOGGED_IN ? " AND (p2.start='' OR p2.start<".$time.") AND (p2.stop='' OR p2.stop>".$time.") AND p2.published=1" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$this->showHidden ? (($this instanceof ModuleSitemap) ? " AND (p1.hide!=1 OR sitemap='map_always')" : " AND p1.hide!=1") : "") . ((FE_USER_LOGGED_IN && !BE_USER_LOGGED_IN) ? " AND p1.guests!=1" : "") . (!BE_USER_LOGGED_IN ? " AND (p1.start='' OR p1.start<".$time.") AND (p1.stop='' OR p1.stop>".$time.") AND p1.published=1" : "") . " ORDER BY p1.sorting")
 									  ->execute($pid);
+		
+		$objParentPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")->limit(1)->execute($pid);
 
 		if ($objSubpages->numRows < 1)
 		{
@@ -238,6 +239,8 @@ class ModuleMobileNavigation extends Module
 					$row = $objSubpages->row();
 
 					$row['isActive'] = true;
+					$row['uniqueId'] = $strUniqID;
+					$row['submenu'] = ($objSubpages->subpages > 0 ? 'submenu' : '');
 					$row['class'] = trim($strClass);
 					$row['title'] = specialchars($objSubpages->title, true);
 					$row['pageTitle'] = specialchars($objSubpages->pageTitle, true);
@@ -269,6 +272,8 @@ class ModuleMobileNavigation extends Module
 					$row = $objSubpages->row();
 
 					$row['isActive'] = false;
+					$row['uniqueId'] = $strUniqID;
+					$row['submenu'] = ($objSubpages->subpages > 0 ? 'submenu' : '');
 					$row['class'] = trim($strClass);
 					$row['title'] = specialchars($objSubpages->title, true);
 					$row['pageTitle'] = specialchars($objSubpages->pageTitle, true);
@@ -292,6 +297,7 @@ class ModuleMobileNavigation extends Module
 			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
 		}
 
+		$objTemplate->parentTitle = $objParentPage->title;
 		$objTemplate->items = $items;
 		$objTemplate->subitems = $subitems;
 		return count($items) ? $objTemplate->parse() : '';
